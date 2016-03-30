@@ -6,4 +6,4 @@ use yii\widgets\ActiveForm;
 <?=$f->field($form,'name')?>
 <?=$f->field($form,'email')?>
 <?=Html::submitButton('Отправить');?>
-<?php $f = ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>

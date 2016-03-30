@@ -8,7 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\myForm;
+use app\models\MyForm;
 
 class SiteController extends Controller
 {
@@ -98,7 +98,7 @@ class SiteController extends Controller
     }
     
     public function actionForm(){
-        $form = new myForm();
+        $form = new MyForm();
         return $this->render('form', ['form' => $form]);
     }
 }
