@@ -25,7 +25,7 @@ class TestForm extends Model{
             [['name', 'email'], 'required','message'=>'Обязательные поля'],
             // email has to be a valid email address
             ['email', 'email','message'=>'Не корректный адрес'],
-            [['file'], 'file']
+            ['file', 'file', 'extensions' => ['png']]
         ];
     }
     

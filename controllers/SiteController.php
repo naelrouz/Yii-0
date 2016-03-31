@@ -8,9 +8,11 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
+use yii\data\Pagination;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\TestForm;
+use app\models\Comments;
 
 class SiteController extends Controller
 {
@@ -98,7 +100,7 @@ class SiteController extends Controller
     public function actionHello($mes = 'Привет Мир!!!' ) {
         return $this->render('hello', ['mes' => $mes]);
     }
-    public function actionForm() {
+    public function actionForm2() {
         $form = new TestForm();
         if($form->load(Yii::$app->request->post()) && $form->validate()){
             $name = Html::encode($form->name);
@@ -110,6 +112,48 @@ class SiteController extends Controller
            $name = '';
            $email = '';
         }
-        return $this->render('form', ['form' => $form,'name' => $name]);
-    }    
+        return $this->render('form2', ['form' => $form,'name' => $name]);
+    }   
+    public function actionComments() {
+        //$comments = Comments::find()->all();
+        $comments = Comments::find();
+        
+        $pagination = new Pagination([
+            'defaultPageSize' => 2,
+            'totalCount' => $comments->count()
+        ]);
+        
+        $comments = $comments->offset($pagination->offset)->limit($pagination->limit)->all();
+        
+        $cookies = \Yii::$app->request->cookies; // 
+        
+        return $this->render('comments',[
+            'comments' => $comments,
+            'pagination' => $pagination,
+            //'name'=> Yii::$app->session->get('name') // передоваемое значение берется из сессии
+            'name' => $cookies->getValue('name') // передоваемое значение берется из Cookies
+                ]);
+    }
+    
+    public function actionUser() {
+        $name = Yii::$app->request->get('name','Гость');
+        
+        // Сохранение данных в сессии
+        //$session = Yii::$app->session;
+        //$session->set('name', $name);
+        // $session->has('name')    // проверить на существование
+        //$session->remove('name'); // убрать переменную из сессии
+        
+        // Сохранение данных в cookies
+        $cookies = Yii::$app->response->cookies;
+        $cookies->remove('name');
+        $cookies->add(new \yii\web\Cookie([
+            'name' => 'name',
+            'value' => $name
+        ]));
+        return $this->render('user',[
+            'name' => $name
+        ]);
+    }
+
 }
